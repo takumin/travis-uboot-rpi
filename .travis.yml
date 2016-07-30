@@ -10,10 +10,10 @@ addons:
 
 script:
 - sed -i -e '/^#define __CONFIG_H$/a\\n\/* rpi1 */\n\/* rpi2 *\/\n/* rpi3_32b *\/\n/* rpi3_64b */' ./u-boot/include/configs/rpi.h
-- sed -i -e '/^\/\* rpi1 \*\/$/a\#ifdef CONFIG_TARGET_RPI\n#define CONFIG_BOOTFILE "rpi1_kernel.img"\n#endif\n' include/configs/rpi.h
-- sed -i -e '/^\/\* rpi2 \*\/$/a\#ifdef CONFIG_TARGET_RPI_2\n#define CONFIG_BOOTFILE "rpi2_kernel.img"\n#endif\n' include/configs/rpi.h
-- sed -i -e '/^\/\* rpi3_32b \*\/$/a\#ifdef CONFIG_TARGET_RPI_3_32B\n#define CONFIG_BOOTFILE "rpi3_32b_kernel.img"\n#endif\n' include/configs/rpi.h
-- sed -i -e '/^\/\* rpi3_64b \*\/$/a\#ifdef CONFIG_TARGET_RPI_3\n#define CONFIG_BOOTFILE "rpi3_64b_kernel.img"\n#endif\n' include/configs/rpi.h
+- sed -i -e '/^\/\* rpi1 \*\/$/a\#ifdef CONFIG_TARGET_RPI\n#define CONFIG_BOOTFILE "rpi1_kernel.img"\n#endif\n' ./u-boot/include/configs/rpi.h
+- sed -i -e '/^\/\* rpi2 \*\/$/a\#ifdef CONFIG_TARGET_RPI_2\n#define CONFIG_BOOTFILE "rpi2_kernel.img"\n#endif\n' ./u-boot/include/configs/rpi.h
+- sed -i -e '/^\/\* rpi3_32b \*\/$/a\#ifdef CONFIG_TARGET_RPI_3_32B\n#define CONFIG_BOOTFILE "rpi3_32b_kernel.img"\n#endif\n' ./u-boot/include/configs/rpi.h
+- sed -i -e '/^\/\* rpi3_64b \*\/$/a\#ifdef CONFIG_TARGET_RPI_3\n#define CONFIG_BOOTFILE "rpi3_64b_kernel.img"\n#endif\n' ./u-boot/include/configs/rpi.h
 - make -C ./u-boot -j 4 CROSS_COMPILE=arm-linux-gnueabihf- O=../rpi1 rpi_defconfig
 - make -C ./u-boot -j 4 CROSS_COMPILE=arm-linux-gnueabihf- O=../rpi2 rpi_2_defconfig
 - make -C ./u-boot -j 4 CROSS_COMPILE=arm-linux-gnueabihf- O=../rpi3_32b rpi_3_32b_defconfig
