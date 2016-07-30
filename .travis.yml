@@ -1,0 +1,27 @@
+sudo: false
+language: c
+addons:
+  apt:
+    packages:
+    - gcc-arm-linux-gnueabihf
+env:
+  global:
+  - ARCH=arm
+  - CROSS_COMPILE=arm-linux-gnueabihf-
+script:
+- make -C u-boot -j 4 O=../rpi1 rpi_defconfig
+- make -C u-boot -j 4 O=../rpi2 rpi_2_defconfig
+- make -C u-boot -j 4 O=../rpi3_32b rpi_3_32b_defconfig
+- make -C u-boot -j 4 O=../rpi3_64b rpi_3_defconfig
+- make -C u-boot -j 4 O=../rpi1 all
+- make -C u-boot -j 4 O=../rpi2 all
+- make -C u-boot -j 4 O=../rpi3_32b all
+- make -C u-boot -j 4 O=../rpi3_64b all
+- cp ./rpi1/u-boot.bin rpi1_uboot.bin
+- cp ./rpi2/u-boot.bin rpi2_uboot.bin
+- cp ./rpi3_32b/u-boot.bin rpi3_32b_uboot.bin
+- cp ./rpi3_64b/u-boot.bin rpi3_64b_uboot.bin
+- md5sum rpi1_uboot.bin rpi2_uboot.bin rpi3_32b_uboot.bin rpi3_64b_uboot.bin | tee MD5SUMS
+- sha1sum rpi1_uboot.bin rpi2_uboot.bin rpi3_32b_uboot.bin rpi3_64b_uboot.bin | tee SHA1SUMS
+- sha256sum rpi1_uboot.bin rpi2_uboot.bin rpi3_32b_uboot.bin rpi3_64b_uboot.bin | tee SHA256SUMS
+- sha512sum rpi1_uboot.bin rpi2_uboot.bin rpi3_32b_uboot.bin rpi3_64b_uboot.bin | tee SHA512SUMS
