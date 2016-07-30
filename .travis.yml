@@ -1,11 +1,13 @@
 sudo: required
 dist: trusty
 language: c
+
 addons:
   apt:
     packages:
     - gcc-arm-linux-gnueabihf
     - gcc-aarch64-linux-gnu
+
 script:
 - make -C u-boot -j 4 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- O=../rpi1 rpi_defconfig
 - make -C u-boot -j 4 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- O=../rpi2 rpi_2_defconfig
@@ -23,3 +25,22 @@ script:
 - sha1sum rpi1_uboot.bin rpi2_uboot.bin rpi3_32b_uboot.bin rpi3_64b_uboot.bin | tee SHA1SUMS
 - sha256sum rpi1_uboot.bin rpi2_uboot.bin rpi3_32b_uboot.bin rpi3_64b_uboot.bin | tee SHA256SUMS
 - sha512sum rpi1_uboot.bin rpi2_uboot.bin rpi3_32b_uboot.bin rpi3_64b_uboot.bin | tee SHA512SUMS
+
+deploy:
+  provider: releases
+  api_key:
+    secure: vwKz4Tp9q8G0AOokyZOauiS7blp60jin+3mswKccq0HZnlD7VlMd1Ew9raXQSqlJ7nQ3C5KYU+A5J7B+c+RylISoyCyOXuovkoNtJcBcI16JK8hHw30UQXIYDU7OQRn4AibxAobyx366Lo8tyOJY0b+AvPdbF1qUIpQq+NTy9VraF7hDSqmx2fWSw4DOf3UigYAJZMbMsU6JuN8pXfs4Oq2cKs1lFbX6FnksirvZTi738ge5Xb5PQ9fomcK8fahfbU+bMsr2i1kg9v4qTq61NRHLF6m7PFtkyx3dcgWoCwCkolMo04bnp0q6V86d+pnmHYdgrs69zNpd6k5PpQ9hyRvWQZZFRnxgo8H54Ta9+W+W4zYMe1EqWFwWj030EY4z4JWVCvtcJc692AVFLP9XR4yAdUN/Oz0YMzjErEi/Ue84O2nrK3G3ZRamWQNEf1g1dUwrXlEsRwQwmpz5LClmem+lcmX/7Ysn3cXBhOJeWK8VJO0dk8ADqyveQm0yzAeemW6cn2qVLrC2w445pn/ktuX51UEwpU88YoykgE24f4cKpxY39ueA/v4hiRA6SQzxpB/YPsA/ZNUmNt2L+Uw8y65K3QBwLZ3zbjt1NNg6jqwhjPX89eO6NIoeNt8SWfDHiXCf6ycw6EoDwl5w7UMpBhwoSLwA8Hy2CHbeEM/V1wk=
+  file:
+  - rpi1_uboot.bin
+  - rpi2_uboot.bin
+  - rpi3_32b_uboot.bin
+  - rpi3_64b_uboot.bin
+  - MD5SUMS
+  - SHA1SUMS
+  - SHA256SUMS
+  - SHA512SUMS
+  on:
+    repo: takumin/travis-uboot-rpi
+    tags: true
+    all_branches: true
+  skip_cleanup: true
