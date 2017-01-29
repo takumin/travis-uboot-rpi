@@ -8,6 +8,14 @@ addons:
     - gcc-arm-linux-gnueabihf
     - gcc-aarch64-linux-gnu
 
+install:
+- git clone --depth=1 git://git.kernel.org/pub/scm/utils/dtc/dtc.git /tmp/dtc
+- make -j4 -C /tmp/dtc
+
+env:
+  global:
+  - PATH=/tmp/dtc:$PATH
+
 script:
 - sed -i -e '/^#define __CONFIG_H$/a\\n\/* rpi1 */\n\/* rpi2 *\/\n/* rpi3_32b *\/\n/* rpi3_64b */' ./u-boot/include/configs/rpi.h
 - sed -i -e '/^\/\* rpi1 \*\/$/a\#ifdef CONFIG_TARGET_RPI\n#define CONFIG_BOOTFILE "rpi1_kernel.img"\n#endif\n' ./u-boot/include/configs/rpi.h
@@ -18,14 +26,14 @@ script:
 - make -C ./u-boot -j 4 CROSS_COMPILE=arm-linux-gnueabihf- O=../rpi2 rpi_2_defconfig
 - make -C ./u-boot -j 4 CROSS_COMPILE=arm-linux-gnueabihf- O=../rpi3_32b rpi_3_32b_defconfig
 - make -C ./u-boot -j 4 CROSS_COMPILE=aarch64-linux-gnu- O=../rpi3_64b rpi_3_defconfig
-- make -C ./u-boot -j 4 CROSS_COMPILE=arm-linux-gnueabihf- O=../rpi1 u-boot-nodtb.bin
-- make -C ./u-boot -j 4 CROSS_COMPILE=arm-linux-gnueabihf- O=../rpi2 u-boot-nodtb.bin
-- make -C ./u-boot -j 4 CROSS_COMPILE=arm-linux-gnueabihf- O=../rpi3_32b u-boot-nodtb.bin
-- make -C ./u-boot -j 4 CROSS_COMPILE=aarch64-linux-gnu- O=../rpi3_64b u-boot-nodtb.bin
-- cp ./rpi1/u-boot-nodtb.bin ./rpi1_uboot.bin
-- cp ./rpi2/u-boot-nodtb.bin ./rpi2_uboot.bin
-- cp ./rpi3_32b/u-boot-nodtb.bin ./rpi3_32b_uboot.bin
-- cp ./rpi3_64b/u-boot-nodtb.bin ./rpi3_64b_uboot.bin
+- make -C ./u-boot -j 4 CROSS_COMPILE=arm-linux-gnueabihf- O=../rpi1 all
+- make -C ./u-boot -j 4 CROSS_COMPILE=arm-linux-gnueabihf- O=../rpi2 all
+- make -C ./u-boot -j 4 CROSS_COMPILE=arm-linux-gnueabihf- O=../rpi3_32b all
+- make -C ./u-boot -j 4 CROSS_COMPILE=aarch64-linux-gnu- O=../rpi3_64b all
+- cp ./rpi1/u-boot ./rpi1_uboot.bin
+- cp ./rpi2/u-boot ./rpi2_uboot.bin
+- cp ./rpi3_32b/u-boot ./rpi3_32b_uboot.bin
+- cp ./rpi3_64b/u-boot ./rpi3_64b_uboot.bin
 - md5sum ./rpi1_uboot.bin ./rpi2_uboot.bin ./rpi3_32b_uboot.bin ./rpi3_64b_uboot.bin | tee MD5SUMS
 - sha1sum ./rpi1_uboot.bin ./rpi2_uboot.bin ./rpi3_32b_uboot.bin ./rpi3_64b_uboot.bin | tee SHA1SUMS
 - sha256sum ./rpi1_uboot.bin ./rpi2_uboot.bin ./rpi3_32b_uboot.bin ./rpi3_64b_uboot.bin | tee SHA256SUMS
