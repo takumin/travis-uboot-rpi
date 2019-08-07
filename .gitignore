@@ -1,0 +1,10 @@
+rpi1/
+rpi2/
+rpi3_32/
+rpi3_64/
+*.bin
+*.dtb
+MD5SUMS
+SHA1SUMS
+SHA256SUMS
+SHA512SUMS
