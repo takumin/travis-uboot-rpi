@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/takumin/travis-uboot-rpi.svg?branch=master)](https://travis-ci.org/takumin/travis-uboot-rpi)
+
 # travis-uboot-rpi
 Raspberry Pi U-Boot for Travis Build
 
