@@ -48,22 +48,22 @@ $(RPI3_BPLUS_64_DIR)/u-boot:
 	@$(MAKE) -C "$(U_BOOT_DIR)" -j "$(PARALLEL)" "O=$(RPI3_BPLUS_64_DIR)" "CROSS_COMPILE=$(ARM64_CROSS_GCC)" all
 
 rpi1_uboot.bin: $(RPI1_DIR)/u-boot
-	@cp "$(RPI1_DIR)/u-boot" "rpi1_uboot.bin"
+	@cp $^ $@
 
 rpi2_uboot.bin: $(RPI2_DIR)/u-boot
-	@cp "$(RPI2_DIR)/u-boot" "rpi2_uboot.bin"
+	@cp $^ $@
 
 rpi3_32_uboot.bin: $(RPI3_32_DIR)/u-boot
-	@cp "$(RPI3_32_DIR)/u-boot" "rpi3_32_uboot.bin"
+	@cp $^ $@
 
 rpi3_64_uboot.bin: $(RPI3_64_DIR)/u-boot
-	@cp "$(RPI3_64_DIR)/u-boot" "rpi3_64_uboot.bin"
+	@cp $^ $@
 
 rpi3_bplus_32_uboot.bin: $(RPI3_BPLUS_32_DIR)/u-boot
-	@cp "$(RPI3_BPLUS_32_DIR)/u-boot" "rpi3_bplus_32_uboot.bin"
+	@cp $^ $@
 
 rpi3_bplus_64_uboot.bin: $(RPI3_BPLUS_64_DIR)/u-boot
-	@cp "$(RPI3_BPLUS_64_DIR)/u-boot" "rpi3_bplus_64_uboot.bin"
+	@cp $^ $@
 
 .PHONY: checksum
 checksum: MD5SUMS SHA1SUMS SHA256SUMS SHA512SUMS
