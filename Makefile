@@ -19,7 +19,7 @@ PARALLEL          := $(shell expr $(shell nproc) + 2)
 default: build checksum
 
 .PHONY: build
-build: $(BUILD_DIR) rpi3_bplus_32_uboot.bin
+build: $(BUILD_DIR) rpi1_uboot.bin rpi2_uboot.bin rpi3_32_uboot.bin rpi3_64_uboot.bin rpi3_bplus_32_uboot.bin rpi3_bplus_64_uboot.bin
 
 $(BUILD_DIR):
 	@mkdir -p $@
@@ -43,24 +43,30 @@ $(RPI3_BPLUS_64_DIR):
 	@mkdir -p $@
 
 $(RPI1_DIR)/.config: $(RPI1_DIR)
-	@cp "$(U_BOOT_DIR)/configs/rpi_defconfig" $@
+	@cp -a "$(U_BOOT_DIR)/configs/rpi_defconfig" $@
+	@touch -r "$(U_BOOT_DIR)/configs/rpi_defconfig" $@
 
 $(RPI2_DIR)/.config: $(RPI2_DIR)
-	@cp "$(U_BOOT_DIR)/configs/rpi_2_defconfig" $@
+	@cp -a "$(U_BOOT_DIR)/configs/rpi_2_defconfig" $@
+	@touch -r "$(U_BOOT_DIR)/configs/rpi_2_defconfig" $@
 
 $(RPI3_32_DIR)/.config: $(RPI3_32_DIR)
-	@cp "$(U_BOOT_DIR)/configs/rpi_3_32b_defconfig" $@
+	@cp -a "$(U_BOOT_DIR)/configs/rpi_3_32b_defconfig" $@
+	@touch -r "$(U_BOOT_DIR)/configs/rpi_3_32b_defconfig" $@
 
 $(RPI3_64_DIR)/.config: $(RPI3_64_DIR)
-	@cp "$(U_BOOT_DIR)/configs/rpi_3_defconfig" $@
+	@cp -a "$(U_BOOT_DIR)/configs/rpi_3_defconfig" $@
+	@touch -r "$(U_BOOT_DIR)/configs/rpi_3_defconfig" $@
 
 $(RPI3_BPLUS_32_DIR)/.config: $(RPI3_BPLUS_32_DIR)
-	@cp "$(U_BOOT_DIR)/configs/rpi_3_b_plus_defconfig" $@
+	@cp -a "$(U_BOOT_DIR)/configs/rpi_3_b_plus_defconfig" $@
 	@sed -i -e 's@CONFIG_TARGET_RPI_3=y@CONFIG_TARGET_RPI_3_32B=y@' $@
 	@sed -i -e 's@CONFIG_SYS_TEXT_BASE=0x00080000@CONFIG_SYS_TEXT_BASE=0x00008000@' $@
+	@touch -r "$(U_BOOT_DIR)/configs/rpi_3_b_plus_defconfig" $@
 
 $(RPI3_BPLUS_64_DIR)/.config: $(RPI3_BPLUS_64_DIR)
-	@cp "$(U_BOOT_DIR)/configs/rpi_3_b_plus_defconfig" $@
+	@cp -a "$(U_BOOT_DIR)/configs/rpi_3_b_plus_defconfig" $@
+	@touch -r "$(U_BOOT_DIR)/configs/rpi_3_b_plus_defconfig" $@
 
 $(RPI1_DIR)/u-boot: $(RPI1_DIR)/.config
 	@$(MAKE) -C "$(U_BOOT_DIR)" -j "$(PARALLEL)" "O=$(RPI1_DIR)" "CROSS_COMPILE=$(ARM32_CROSS_GCC)" olddefconfig
