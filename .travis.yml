@@ -8,10 +8,6 @@ addons:
     - gcc-arm-linux-gnueabihf
     - gcc-aarch64-linux-gnu
 
-before_script:
-- mkdir build
-- sudo mount -t tmpfs tmpfs build
-
 script:
 - make
 - make show
