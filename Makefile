@@ -1,19 +1,19 @@
-# TODO: CONFIG_BOOTCOMMAND
+ARM32_CROSS_GCC    ?= arm-linux-gnueabihf-
+ARM64_CROSS_GCC    ?= aarch64-linux-gnu-
 
-ARM32_CROSS_GCC   ?= arm-linux-gnueabihf-
-ARM64_CROSS_GCC   ?= aarch64-linux-gnu-
+U_BOOT_DIR         ?= $(abspath $(CURDIR)/u-boot)
+BUILD_DIR          ?= $(abspath $(CURDIR)/build)
 
-U_BOOT_DIR        ?= $(abspath $(CURDIR)/u-boot)
-BUILD_DIR         ?= $(abspath $(CURDIR)/build)
+RPI1_DIR           ?= $(abspath $(BUILD_DIR)/rpi1)
+RPI2_DIR           ?= $(abspath $(BUILD_DIR)/rpi2)
+RPI3_32_DIR        ?= $(abspath $(BUILD_DIR)/rpi3_32)
+RPI3_64_DIR        ?= $(abspath $(BUILD_DIR)/rpi3_64)
+RPI3_BPLUS_32_DIR  ?= $(abspath $(BUILD_DIR)/rpi3_bplus_32)
+RPI3_BPLUS_64_DIR  ?= $(abspath $(BUILD_DIR)/rpi3_bplus_64)
 
-RPI1_DIR          ?= $(abspath $(BUILD_DIR)/rpi1)
-RPI2_DIR          ?= $(abspath $(BUILD_DIR)/rpi2)
-RPI3_32_DIR       ?= $(abspath $(BUILD_DIR)/rpi3_32)
-RPI3_64_DIR       ?= $(abspath $(BUILD_DIR)/rpi3_64)
-RPI3_BPLUS_32_DIR ?= $(abspath $(BUILD_DIR)/rpi3_bplus_32)
-RPI3_BPLUS_64_DIR ?= $(abspath $(BUILD_DIR)/rpi3_bplus_64)
+PARALLEL           ?= $(shell expr $(shell nproc) + 2)
 
-PARALLEL          ?= $(shell expr $(shell nproc) + 2)
+CONFIG_BOOTCOMMAND ?= usb start; dhcp; if pxe get; then pxe boot; fi
 
 .PHONY: default
 default: build checksum
@@ -44,28 +44,34 @@ $(RPI3_BPLUS_64_DIR):
 
 $(RPI1_DIR)/.config: $(RPI1_DIR)
 	@cp -a "$(U_BOOT_DIR)/configs/rpi_defconfig" $@
+	@echo "#define CONFIG_BOOTCOMMAND \"$(CONFIG_BOOTCOMMAND)\"" >> $@
 	@touch -r "$(U_BOOT_DIR)/configs/rpi_defconfig" $@
 
 $(RPI2_DIR)/.config: $(RPI2_DIR)
 	@cp -a "$(U_BOOT_DIR)/configs/rpi_2_defconfig" $@
+	@echo "#define CONFIG_BOOTCOMMAND \"$(CONFIG_BOOTCOMMAND)\"" >> $@
 	@touch -r "$(U_BOOT_DIR)/configs/rpi_2_defconfig" $@
 
 $(RPI3_32_DIR)/.config: $(RPI3_32_DIR)
 	@cp -a "$(U_BOOT_DIR)/configs/rpi_3_32b_defconfig" $@
+	@echo "#define CONFIG_BOOTCOMMAND \"$(CONFIG_BOOTCOMMAND)\"" >> $@
 	@touch -r "$(U_BOOT_DIR)/configs/rpi_3_32b_defconfig" $@
 
 $(RPI3_64_DIR)/.config: $(RPI3_64_DIR)
 	@cp -a "$(U_BOOT_DIR)/configs/rpi_3_defconfig" $@
+	@echo "#define CONFIG_BOOTCOMMAND \"$(CONFIG_BOOTCOMMAND)\"" >> $@
 	@touch -r "$(U_BOOT_DIR)/configs/rpi_3_defconfig" $@
 
 $(RPI3_BPLUS_32_DIR)/.config: $(RPI3_BPLUS_32_DIR)
 	@cp -a "$(U_BOOT_DIR)/configs/rpi_3_b_plus_defconfig" $@
+	@echo "#define CONFIG_BOOTCOMMAND \"$(CONFIG_BOOTCOMMAND)\"" >> $@
 	@sed -i -e 's@CONFIG_TARGET_RPI_3=y@CONFIG_TARGET_RPI_3_32B=y@' $@
 	@sed -i -e 's@CONFIG_SYS_TEXT_BASE=0x00080000@CONFIG_SYS_TEXT_BASE=0x00008000@' $@
 	@touch -r "$(U_BOOT_DIR)/configs/rpi_3_b_plus_defconfig" $@
 
 $(RPI3_BPLUS_64_DIR)/.config: $(RPI3_BPLUS_64_DIR)
 	@cp -a "$(U_BOOT_DIR)/configs/rpi_3_b_plus_defconfig" $@
+	@echo "#define CONFIG_BOOTCOMMAND \"$(CONFIG_BOOTCOMMAND)\"" >> $@
 	@touch -r "$(U_BOOT_DIR)/configs/rpi_3_b_plus_defconfig" $@
 
 $(RPI1_DIR)/u-boot.bin: $(RPI1_DIR)/.config
