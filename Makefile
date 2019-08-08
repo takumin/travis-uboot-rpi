@@ -13,7 +13,7 @@ RPI3_BPLUS_64_DIR  ?= $(abspath $(BUILD_DIR)/rpi3_bplus_64)
 
 PARALLEL           ?= $(shell expr $(shell nproc) + 2)
 
-CONFIG_BOOTCOMMAND ?= usb start; dhcp; if pxe get; then pxe boot; fi
+CONFIG_BOOTCOMMAND ?= dhcp; if pxe get; then pxe boot; fi
 
 .PHONY: default
 default: build checksum
