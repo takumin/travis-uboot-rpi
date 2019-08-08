@@ -10,7 +10,7 @@ RPI2_DIR        := $(abspath $(CURDIR)/rpi2)
 RPI3_32_DIR     := $(abspath $(CURDIR)/rpi3_32)
 RPI3_64_DIR     := $(abspath $(CURDIR)/rpi3_64)
 
-PARALLEL        := $(shell nproc)
+PARALLEL        := $(shell expr $(shell nproc) + 2)
 
 .PHONY: default
 default: build dts checksum
