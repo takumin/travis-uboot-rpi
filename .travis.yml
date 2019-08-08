@@ -8,9 +8,9 @@ addons:
     - gcc-arm-linux-gnueabihf
     - gcc-aarch64-linux-gnu
 
-env:
-  global:
-  - BUILD_DIR="/tmp/uboot-rpi"
+before_script:
+- mkdir build
+- sudo mount -t tmpfs tmpfs build
 
 script:
 - make
