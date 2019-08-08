@@ -157,7 +157,18 @@ show: MD5SUMS SHA1SUMS SHA256SUMS SHA512SUMS
 
 .PHONY: clean
 clean:
-	@rm -fr rpi1_uboot.bin rpi2_uboot.bin rpi3_32_uboot.bin rpi3_64_uboot.bin rpi3_bplus_32_uboot.bin rpi3_bplus_64_uboot.bin
+	@$(MAKE) -C "$(U_BOOT_DIR)" -j "$(PARALLEL)" "O=$(RPI1_DIR)" "CROSS_COMPILE=$(ARM32_CROSS_GCC)" clean
+	@$(MAKE) -C "$(U_BOOT_DIR)" -j "$(PARALLEL)" "O=$(RPI2_DIR)" "CROSS_COMPILE=$(ARM32_CROSS_GCC)" clean
+	@$(MAKE) -C "$(U_BOOT_DIR)" -j "$(PARALLEL)" "O=$(RPI3_32_DIR)" "CROSS_COMPILE=$(ARM32_CROSS_GCC)" clean
+	@$(MAKE) -C "$(U_BOOT_DIR)" -j "$(PARALLEL)" "O=$(RPI3_64_DIR)" "CROSS_COMPILE=$(ARM64_CROSS_GCC)" clean
+	@$(MAKE) -C "$(U_BOOT_DIR)" -j "$(PARALLEL)" "O=$(RPI3_BPLUS_32_DIR)" "CROSS_COMPILE=$(ARM32_CROSS_GCC)" clean
+	@$(MAKE) -C "$(U_BOOT_DIR)" -j "$(PARALLEL)" "O=$(RPI3_BPLUS_64_DIR)" "CROSS_COMPILE=$(ARM64_CROSS_GCC)" clean
+	@rm -fr rpi1_uboot.bin \
+		rpi2_uboot.bin \
+		rpi3_32_uboot.bin \
+		rpi3_64_uboot.bin \
+		rpi3_bplus_32_uboot.bin \
+		rpi3_bplus_64_uboot.bin
 	@rm -fr MD5SUMS SHA1SUMS SHA256SUMS SHA512SUMS
 
 .PHONY: distclean
