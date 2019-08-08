@@ -18,8 +18,8 @@ deploy:
   file:
   - rpi1_uboot.bin
   - rpi2_uboot.bin
-  - rpi3_32b_uboot.bin
-  - rpi3_64b_uboot.bin
+  - rpi3_32_uboot.bin
+  - rpi3_64_uboot.bin
   - bcm2835-rpi-b.dtb
   - bcm2836-rpi-2-b.dtb
   - bcm2837-rpi-3-b.dtb
