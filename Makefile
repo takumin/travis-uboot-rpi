@@ -1,19 +1,19 @@
 # TODO: CONFIG_BOOTCOMMAND
 
-ARM32_CROSS_GCC   := "arm-linux-gnueabihf-"
-ARM64_CROSS_GCC   := "aarch64-linux-gnu-"
+ARM32_CROSS_GCC   ?= arm-linux-gnueabihf-
+ARM64_CROSS_GCC   ?= aarch64-linux-gnu-
 
-U_BOOT_DIR        := $(abspath $(CURDIR)/u-boot)
-BUILD_DIR         := $(abspath $(CURDIR)/build)
+U_BOOT_DIR        ?= $(abspath $(CURDIR)/u-boot)
+BUILD_DIR         ?= $(abspath $(CURDIR)/build)
 
-RPI1_DIR          := $(abspath $(BUILD_DIR)/rpi1)
-RPI2_DIR          := $(abspath $(BUILD_DIR)/rpi2)
-RPI3_32_DIR       := $(abspath $(BUILD_DIR)/rpi3_32)
-RPI3_64_DIR       := $(abspath $(BUILD_DIR)/rpi3_64)
-RPI3_BPLUS_32_DIR := $(abspath $(BUILD_DIR)/rpi3_bplus_32)
-RPI3_BPLUS_64_DIR := $(abspath $(BUILD_DIR)/rpi3_bplus_64)
+RPI1_DIR          ?= $(abspath $(BUILD_DIR)/rpi1)
+RPI2_DIR          ?= $(abspath $(BUILD_DIR)/rpi2)
+RPI3_32_DIR       ?= $(abspath $(BUILD_DIR)/rpi3_32)
+RPI3_64_DIR       ?= $(abspath $(BUILD_DIR)/rpi3_64)
+RPI3_BPLUS_32_DIR ?= $(abspath $(BUILD_DIR)/rpi3_bplus_32)
+RPI3_BPLUS_64_DIR ?= $(abspath $(BUILD_DIR)/rpi3_bplus_64)
 
-PARALLEL          := $(shell expr $(shell nproc) + 2)
+PARALLEL          ?= $(shell expr $(shell nproc) + 2)
 
 .PHONY: default
 default: build checksum
