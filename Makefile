@@ -13,7 +13,7 @@ RPI3_64_DIR     := $(abspath $(CURDIR)/rpi3_64)
 PARALLEL        := $(shell expr $(shell nproc) + 2)
 
 .PHONY: default
-default: build dts checksum
+default: build checksum
 
 .PHONY: build
 build: rpi1_uboot.bin rpi2_uboot.bin rpi3_32_uboot.bin rpi3_64_uboot.bin
@@ -46,31 +46,19 @@ rpi3_32_uboot.bin: $(RPI3_32_DIR)/u-boot
 rpi3_64_uboot.bin: $(RPI3_64_DIR)/u-boot
 	@cp "$(RPI3_64_DIR)/u-boot" "rpi3_64_uboot.bin"
 
-.PHONY: dts
-dts: bcm2835-rpi-b.dtb bcm2836-rpi-2-b.dtb bcm2837-rpi-3-b.dtb
-
-bcm2835-rpi-b.dtb: $(RPI1_DIR)/u-boot
-	@cp "$(RPI1_DIR)/arch/arm/dts/$@" $@
-
-bcm2836-rpi-2-b.dtb: $(RPI2_DIR)/u-boot
-	@cp "$(RPI2_DIR)/arch/arm/dts/$@" $@
-
-bcm2837-rpi-3-b.dtb: $(RPI3_32_DIR)/u-boot
-	@cp "$(RPI3_32_DIR)/arch/arm/dts/$@" $@
-
 .PHONY: checksum
 checksum: MD5SUMS SHA1SUMS SHA256SUMS SHA512SUMS
 
-MD5SUMS: rpi1_uboot.bin rpi2_uboot.bin rpi3_32_uboot.bin rpi3_64_uboot.bin bcm2835-rpi-b.dtb bcm2836-rpi-2-b.dtb bcm2837-rpi-3-b.dtb
+MD5SUMS: rpi1_uboot.bin rpi2_uboot.bin rpi3_32_uboot.bin rpi3_64_uboot.bin
 	@md5sum $^ | tee $@ > /dev/null
 
-SHA1SUMS: rpi1_uboot.bin rpi2_uboot.bin rpi3_32_uboot.bin rpi3_64_uboot.bin bcm2835-rpi-b.dtb bcm2836-rpi-2-b.dtb bcm2837-rpi-3-b.dtb
+SHA1SUMS: rpi1_uboot.bin rpi2_uboot.bin rpi3_32_uboot.bin rpi3_64_uboot.bin
 	@sha1sum $^ | tee $@ > /dev/null
 
-SHA256SUMS: rpi1_uboot.bin rpi2_uboot.bin rpi3_32_uboot.bin rpi3_64_uboot.bin bcm2835-rpi-b.dtb bcm2836-rpi-2-b.dtb bcm2837-rpi-3-b.dtb
+SHA256SUMS: rpi1_uboot.bin rpi2_uboot.bin rpi3_32_uboot.bin rpi3_64_uboot.bin
 	@sha256sum $^ | tee $@ > /dev/null
 
-SHA512SUMS: rpi1_uboot.bin rpi2_uboot.bin rpi3_32_uboot.bin rpi3_64_uboot.bin bcm2835-rpi-b.dtb bcm2836-rpi-2-b.dtb bcm2837-rpi-3-b.dtb
+SHA512SUMS: rpi1_uboot.bin rpi2_uboot.bin rpi3_32_uboot.bin rpi3_64_uboot.bin
 	@sha512sum $^ | tee $@ > /dev/null
 
 .PHONY: show
@@ -97,7 +85,6 @@ show: MD5SUMS SHA1SUMS SHA256SUMS SHA512SUMS
 .PHONY: clean
 clean:
 	@rm -fr rpi1_uboot.bin rpi2_uboot.bin rpi3_32_uboot.bin rpi3_64_uboot.bin
-	@rm -fr bcm2835-rpi-b.dtb bcm2836-rpi-2-b.dtb bcm2837-rpi-3-b.dtb
 	@rm -fr MD5SUMS SHA1SUMS SHA256SUMS SHA512SUMS
 
 .PHONY: distclean

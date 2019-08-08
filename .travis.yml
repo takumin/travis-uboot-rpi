@@ -19,7 +19,6 @@ deploy:
   file_glob: true
   file:
   - "*.bin"
-  - "*.dtb"
   - "MD5SUMS"
   - "SHA1SUMS"
   - "SHA256SUMS"
