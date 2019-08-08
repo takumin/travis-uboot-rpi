@@ -19,37 +19,71 @@ PARALLEL          := $(shell expr $(shell nproc) + 2)
 default: build checksum
 
 .PHONY: build
-build: $(BUILD_DIR) rpi1_uboot.bin rpi2_uboot.bin rpi3_32_uboot.bin rpi3_64_uboot.bin rpi3_bplus_32_uboot.bin rpi3_bplus_64_uboot.bin
+build: $(BUILD_DIR) rpi3_bplus_32_uboot.bin
 
 $(BUILD_DIR):
 	@mkdir -p $@
 
-$(RPI1_DIR)/u-boot:
-	@$(MAKE) -C "$(U_BOOT_DIR)" -j "$(PARALLEL)" "O=$(RPI1_DIR)" "CROSS_COMPILE=$(ARM32_CROSS_GCC)" rpi_defconfig
+$(RPI1_DIR):
+	@mkdir -p $@
+
+$(RPI2_DIR):
+	@mkdir -p $@
+
+$(RPI3_32_DIR):
+	@mkdir -p $@
+
+$(RPI3_64_DIR):
+	@mkdir -p $@
+
+$(RPI3_BPLUS_32_DIR):
+	@mkdir -p $@
+
+$(RPI3_BPLUS_64_DIR):
+	@mkdir -p $@
+
+$(RPI1_DIR)/.config: $(RPI1_DIR)
+	@cp "$(U_BOOT_DIR)/configs/rpi_defconfig" $@
+
+$(RPI2_DIR)/.config: $(RPI2_DIR)
+	@cp "$(U_BOOT_DIR)/configs/rpi_2_defconfig" $@
+
+$(RPI3_32_DIR)/.config: $(RPI3_32_DIR)
+	@cp "$(U_BOOT_DIR)/configs/rpi_3_32b_defconfig" $@
+
+$(RPI3_64_DIR)/.config: $(RPI3_64_DIR)
+	@cp "$(U_BOOT_DIR)/configs/rpi_3_defconfig" $@
+
+$(RPI3_BPLUS_32_DIR)/.config: $(RPI3_BPLUS_32_DIR)
+	@cp "$(U_BOOT_DIR)/configs/rpi_3_b_plus_defconfig" $@
+	@sed -i -e 's@CONFIG_TARGET_RPI_3=y@CONFIG_TARGET_RPI_3_32B=y@' $@
+	@sed -i -e 's@CONFIG_SYS_TEXT_BASE=0x00080000@CONFIG_SYS_TEXT_BASE=0x00008000@' $@
+
+$(RPI3_BPLUS_64_DIR)/.config: $(RPI3_BPLUS_64_DIR)
+	@cp "$(U_BOOT_DIR)/configs/rpi_3_b_plus_defconfig" $@
+
+$(RPI1_DIR)/u-boot: $(RPI1_DIR)/.config
+	@$(MAKE) -C "$(U_BOOT_DIR)" -j "$(PARALLEL)" "O=$(RPI1_DIR)" "CROSS_COMPILE=$(ARM32_CROSS_GCC)" olddefconfig
 	@$(MAKE) -C "$(U_BOOT_DIR)" -j "$(PARALLEL)" "O=$(RPI1_DIR)" "CROSS_COMPILE=$(ARM32_CROSS_GCC)" all
 
-$(RPI2_DIR)/u-boot:
-	@$(MAKE) -C "$(U_BOOT_DIR)" -j "$(PARALLEL)" "O=$(RPI2_DIR)" "CROSS_COMPILE=$(ARM32_CROSS_GCC)" rpi_2_defconfig
+$(RPI2_DIR)/u-boot: $(RPI2_DIR)/.config
+	@$(MAKE) -C "$(U_BOOT_DIR)" -j "$(PARALLEL)" "O=$(RPI2_DIR)" "CROSS_COMPILE=$(ARM32_CROSS_GCC)" olddefconfig
 	@$(MAKE) -C "$(U_BOOT_DIR)" -j "$(PARALLEL)" "O=$(RPI2_DIR)" "CROSS_COMPILE=$(ARM32_CROSS_GCC)" all
 
-$(RPI3_32_DIR)/u-boot:
-	@$(MAKE) -C "$(U_BOOT_DIR)" -j "$(PARALLEL)" "O=$(RPI3_32_DIR)" "CROSS_COMPILE=$(ARM32_CROSS_GCC)" rpi_3_32b_defconfig
+$(RPI3_32_DIR)/u-boot: $(RPI3_32_DIR)/.config
+	@$(MAKE) -C "$(U_BOOT_DIR)" -j "$(PARALLEL)" "O=$(RPI3_32_DIR)" "CROSS_COMPILE=$(ARM32_CROSS_GCC)" olddefconfig
 	@$(MAKE) -C "$(U_BOOT_DIR)" -j "$(PARALLEL)" "O=$(RPI3_32_DIR)" "CROSS_COMPILE=$(ARM32_CROSS_GCC)" all
 
-$(RPI3_64_DIR)/u-boot:
-	@$(MAKE) -C "$(U_BOOT_DIR)" -j "$(PARALLEL)" "O=$(RPI3_64_DIR)" "CROSS_COMPILE=$(ARM64_CROSS_GCC)" rpi_3_defconfig
+$(RPI3_64_DIR)/u-boot: $(RPI3_64_DIR)/.config
+	@$(MAKE) -C "$(U_BOOT_DIR)" -j "$(PARALLEL)" "O=$(RPI3_64_DIR)" "CROSS_COMPILE=$(ARM64_CROSS_GCC)" olddefconfig
 	@$(MAKE) -C "$(U_BOOT_DIR)" -j "$(PARALLEL)" "O=$(RPI3_64_DIR)" "CROSS_COMPILE=$(ARM64_CROSS_GCC)" all
 
-$(RPI3_BPLUS_32_DIR)/u-boot:
-	@cp "$(U_BOOT_DIR)/configs/rpi_3_b_plus_defconfig"                              "$(U_BOOT_DIR)/configs/rpi_3_b_plus_32b_defconfig"
-	@sed -i -e 's@CONFIG_TARGET_RPI_3=y@CONFIG_TARGET_RPI_3_32B=y@'                 "$(U_BOOT_DIR)/configs/rpi_3_b_plus_32b_defconfig"
-	@sed -i -e 's@CONFIG_SYS_TEXT_BASE=0x00080000@CONFIG_SYS_TEXT_BASE=0x00008000@' "$(U_BOOT_DIR)/configs/rpi_3_b_plus_32b_defconfig"
-	@$(MAKE) -C "$(U_BOOT_DIR)" -j "$(PARALLEL)" "O=$(RPI3_BPLUS_32_DIR)" "CROSS_COMPILE=$(ARM32_CROSS_GCC)" rpi_3_b_plus_32b_defconfig
+$(RPI3_BPLUS_32_DIR)/u-boot: $(RPI3_BPLUS_32_DIR)/.config
+	@$(MAKE) -C "$(U_BOOT_DIR)" -j "$(PARALLEL)" "O=$(RPI3_BPLUS_32_DIR)" "CROSS_COMPILE=$(ARM32_CROSS_GCC)" olddefconfig
 	@$(MAKE) -C "$(U_BOOT_DIR)" -j "$(PARALLEL)" "O=$(RPI3_BPLUS_32_DIR)" "CROSS_COMPILE=$(ARM32_CROSS_GCC)" all
-	@rm "$(U_BOOT_DIR)/configs/rpi_3_b_plus_32b_defconfig"
 
-$(RPI3_BPLUS_64_DIR)/u-boot:
-	@$(MAKE) -C "$(U_BOOT_DIR)" -j "$(PARALLEL)" "O=$(RPI3_BPLUS_64_DIR)" "CROSS_COMPILE=$(ARM64_CROSS_GCC)" rpi_3_b_plus_defconfig
+$(RPI3_BPLUS_64_DIR)/u-boot: $(RPI3_BPLUS_64_DIR)/.config
+	@$(MAKE) -C "$(U_BOOT_DIR)" -j "$(PARALLEL)" "O=$(RPI3_BPLUS_64_DIR)" "CROSS_COMPILE=$(ARM64_CROSS_GCC)" olddefconfig
 	@$(MAKE) -C "$(U_BOOT_DIR)" -j "$(PARALLEL)" "O=$(RPI3_BPLUS_64_DIR)" "CROSS_COMPILE=$(ARM64_CROSS_GCC)" all
 
 rpi1_uboot.bin: $(RPI1_DIR)/u-boot
