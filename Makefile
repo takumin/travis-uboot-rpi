@@ -13,6 +13,9 @@ RPI3_BPLUS_64_DIR  ?= $(abspath $(BUILD_DIR)/rpi3_bplus_64)
 
 PARALLEL           ?= $(shell expr $(shell nproc) + 2)
 
+ARM32_BOOTFILE     ?= ipxe/bin/arm32.efi
+ARM64_BOOTFILE     ?= ipxe/bin/arm64.efi
+
 CONFIG_BOOTCOMMAND ?= dhcp; if pxe get; then pxe boot; fi
 
 .PHONY: default
@@ -44,35 +47,35 @@ $(RPI3_BPLUS_64_DIR):
 
 $(RPI1_DIR)/.config: $(RPI1_DIR)
 	@cp -a "$(U_BOOT_DIR)/configs/rpi_defconfig" $@
-	@echo "CONFIG_BOOTCOMMAND=\"$(CONFIG_BOOTCOMMAND)\"" >> $@
+	@echo "CONFIG_BOOTCOMMAND=\"setenv bootfile $(ARM32_BOOTFILE); $(CONFIG_BOOTCOMMAND)\"" >> $@
 	@echo "CONFIG_CMD_BOOTEFI=y" >> $@
 	@echo "CONFIG_EFI_LOADER=y" >> $@
 	@touch -r "$(U_BOOT_DIR)/configs/rpi_defconfig" $@
 
 $(RPI2_DIR)/.config: $(RPI2_DIR)
 	@cp -a "$(U_BOOT_DIR)/configs/rpi_2_defconfig" $@
-	@echo "CONFIG_BOOTCOMMAND=\"$(CONFIG_BOOTCOMMAND)\"" >> $@
+	@echo "CONFIG_BOOTCOMMAND=\"setenv bootfile $(ARM32_BOOTFILE); $(CONFIG_BOOTCOMMAND)\"" >> $@
 	@echo "CONFIG_CMD_BOOTEFI=y" >> $@
 	@echo "CONFIG_EFI_LOADER=y" >> $@
 	@touch -r "$(U_BOOT_DIR)/configs/rpi_2_defconfig" $@
 
 $(RPI3_32_DIR)/.config: $(RPI3_32_DIR)
 	@cp -a "$(U_BOOT_DIR)/configs/rpi_3_32b_defconfig" $@
-	@echo "CONFIG_BOOTCOMMAND=\"$(CONFIG_BOOTCOMMAND)\"" >> $@
+	@echo "CONFIG_BOOTCOMMAND=\"setenv bootfile $(ARM32_BOOTFILE); $(CONFIG_BOOTCOMMAND)\"" >> $@
 	@echo "CONFIG_CMD_BOOTEFI=y" >> $@
 	@echo "CONFIG_EFI_LOADER=y" >> $@
 	@touch -r "$(U_BOOT_DIR)/configs/rpi_3_32b_defconfig" $@
 
 $(RPI3_64_DIR)/.config: $(RPI3_64_DIR)
 	@cp -a "$(U_BOOT_DIR)/configs/rpi_3_defconfig" $@
-	@echo "CONFIG_BOOTCOMMAND=\"$(CONFIG_BOOTCOMMAND)\"" >> $@
+	@echo "CONFIG_BOOTCOMMAND=\"setenv bootfile $(ARM64_BOOTFILE); $(CONFIG_BOOTCOMMAND)\"" >> $@
 	@echo "CONFIG_CMD_BOOTEFI=y" >> $@
 	@echo "CONFIG_EFI_LOADER=y" >> $@
 	@touch -r "$(U_BOOT_DIR)/configs/rpi_3_defconfig" $@
 
 $(RPI3_BPLUS_32_DIR)/.config: $(RPI3_BPLUS_32_DIR)
 	@cp -a "$(U_BOOT_DIR)/configs/rpi_3_b_plus_defconfig" $@
-	@echo "CONFIG_BOOTCOMMAND=\"$(CONFIG_BOOTCOMMAND)\"" >> $@
+	@echo "CONFIG_BOOTCOMMAND=\"setenv bootfile $(ARM32_BOOTFILE); $(CONFIG_BOOTCOMMAND)\"" >> $@
 	@echo "CONFIG_CMD_BOOTEFI=y" >> $@
 	@echo "CONFIG_EFI_LOADER=y" >> $@
 	@sed -i -e 's@CONFIG_TARGET_RPI_3=y@CONFIG_TARGET_RPI_3_32B=y@' $@
@@ -81,7 +84,7 @@ $(RPI3_BPLUS_32_DIR)/.config: $(RPI3_BPLUS_32_DIR)
 
 $(RPI3_BPLUS_64_DIR)/.config: $(RPI3_BPLUS_64_DIR)
 	@cp -a "$(U_BOOT_DIR)/configs/rpi_3_b_plus_defconfig" $@
-	@echo "CONFIG_BOOTCOMMAND=\"$(CONFIG_BOOTCOMMAND)\"" >> $@
+	@echo "CONFIG_BOOTCOMMAND=\"setenv bootfile $(ARM64_BOOTFILE); $(CONFIG_BOOTCOMMAND)\"" >> $@
 	@echo "CONFIG_CMD_BOOTEFI=y" >> $@
 	@echo "CONFIG_EFI_LOADER=y" >> $@
 	@touch -r "$(U_BOOT_DIR)/configs/rpi_3_b_plus_defconfig" $@
