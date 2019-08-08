@@ -127,14 +127,15 @@ SHA512SUMS: rpi1_uboot.bin rpi2_uboot.bin rpi3_32_uboot.bin rpi3_64_uboot.bin rp
 
 .PHONY: show
 show: MD5SUMS SHA1SUMS SHA256SUMS SHA512SUMS
-	@echo "U-Boot Directory:                                $(U_BOOT_DIR)"
-	@echo "Raspberry Pi 1 Model B Build Directory:          $(RPI1_DIR)"
-	@echo "Raspberry Pi 2 Model B Build Directory:          $(RPI2_DIR)"
-	@echo "Raspberry Pi 3 Model B (32Bit) Build Directory:  $(RPI3_32_DIR)"
-	@echo "Raspberry Pi 3 Model B (64Bit) Build Directory:  $(RPI3_64_DIR)"
-	@echo "Raspberry Pi 3 Model B+ (32Bit) Build Directory: $(RPI3_BPLUS_32_DIR)"
-	@echo "Raspberry Pi 3 Model B+ (64Bit) Build Directory: $(RPI3_BPLUS_64_DIR)"
-	@echo "Parallel Build Number:                           $(PARALLEL)"
+	@echo "U-Boot Directory:                        $(U_BOOT_DIR)"
+	@echo "Build Directory:                         $(BUILD_DIR)"
+	@echo "  -> Raspberry Pi Model A/A+/B+/CM/Zero: $(RPI1_DIR)"
+	@echo "  -> Raspberry Pi 2 Model B:             $(RPI2_DIR)"
+	@echo "  -> Raspberry Pi 3 Model B (32Bit):     $(RPI3_32_DIR)"
+	@echo "  -> Raspberry Pi 3 Model B (64Bit):     $(RPI3_64_DIR)"
+	@echo "  -> Raspberry Pi 3 Model B+ (32Bit):    $(RPI3_BPLUS_32_DIR)"
+	@echo "  -> Raspberry Pi 3 Model B+ (64Bit):    $(RPI3_BPLUS_64_DIR)"
+	@echo "Parallel Build Number:                   $(PARALLEL)"
 	@echo
 	@echo "MD5SUMS"
 	@cat MD5SUMS
