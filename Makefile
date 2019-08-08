@@ -68,46 +68,46 @@ $(RPI3_BPLUS_64_DIR)/.config: $(RPI3_BPLUS_64_DIR)
 	@cp -a "$(U_BOOT_DIR)/configs/rpi_3_b_plus_defconfig" $@
 	@touch -r "$(U_BOOT_DIR)/configs/rpi_3_b_plus_defconfig" $@
 
-$(RPI1_DIR)/u-boot: $(RPI1_DIR)/.config
+$(RPI1_DIR)/u-boot.bin: $(RPI1_DIR)/.config
 	@$(MAKE) -C "$(U_BOOT_DIR)" -j "$(PARALLEL)" "O=$(RPI1_DIR)" "CROSS_COMPILE=$(ARM32_CROSS_GCC)" olddefconfig
 	@$(MAKE) -C "$(U_BOOT_DIR)" -j "$(PARALLEL)" "O=$(RPI1_DIR)" "CROSS_COMPILE=$(ARM32_CROSS_GCC)" all
 
-$(RPI2_DIR)/u-boot: $(RPI2_DIR)/.config
+$(RPI2_DIR)/u-boot.bin: $(RPI2_DIR)/.config
 	@$(MAKE) -C "$(U_BOOT_DIR)" -j "$(PARALLEL)" "O=$(RPI2_DIR)" "CROSS_COMPILE=$(ARM32_CROSS_GCC)" olddefconfig
 	@$(MAKE) -C "$(U_BOOT_DIR)" -j "$(PARALLEL)" "O=$(RPI2_DIR)" "CROSS_COMPILE=$(ARM32_CROSS_GCC)" all
 
-$(RPI3_32_DIR)/u-boot: $(RPI3_32_DIR)/.config
+$(RPI3_32_DIR)/u-boot.bin: $(RPI3_32_DIR)/.config
 	@$(MAKE) -C "$(U_BOOT_DIR)" -j "$(PARALLEL)" "O=$(RPI3_32_DIR)" "CROSS_COMPILE=$(ARM32_CROSS_GCC)" olddefconfig
 	@$(MAKE) -C "$(U_BOOT_DIR)" -j "$(PARALLEL)" "O=$(RPI3_32_DIR)" "CROSS_COMPILE=$(ARM32_CROSS_GCC)" all
 
-$(RPI3_64_DIR)/u-boot: $(RPI3_64_DIR)/.config
+$(RPI3_64_DIR)/u-boot.bin: $(RPI3_64_DIR)/.config
 	@$(MAKE) -C "$(U_BOOT_DIR)" -j "$(PARALLEL)" "O=$(RPI3_64_DIR)" "CROSS_COMPILE=$(ARM64_CROSS_GCC)" olddefconfig
 	@$(MAKE) -C "$(U_BOOT_DIR)" -j "$(PARALLEL)" "O=$(RPI3_64_DIR)" "CROSS_COMPILE=$(ARM64_CROSS_GCC)" all
 
-$(RPI3_BPLUS_32_DIR)/u-boot: $(RPI3_BPLUS_32_DIR)/.config
+$(RPI3_BPLUS_32_DIR)/u-boot.bin: $(RPI3_BPLUS_32_DIR)/.config
 	@$(MAKE) -C "$(U_BOOT_DIR)" -j "$(PARALLEL)" "O=$(RPI3_BPLUS_32_DIR)" "CROSS_COMPILE=$(ARM32_CROSS_GCC)" olddefconfig
 	@$(MAKE) -C "$(U_BOOT_DIR)" -j "$(PARALLEL)" "O=$(RPI3_BPLUS_32_DIR)" "CROSS_COMPILE=$(ARM32_CROSS_GCC)" all
 
-$(RPI3_BPLUS_64_DIR)/u-boot: $(RPI3_BPLUS_64_DIR)/.config
+$(RPI3_BPLUS_64_DIR)/u-boot.bin: $(RPI3_BPLUS_64_DIR)/.config
 	@$(MAKE) -C "$(U_BOOT_DIR)" -j "$(PARALLEL)" "O=$(RPI3_BPLUS_64_DIR)" "CROSS_COMPILE=$(ARM64_CROSS_GCC)" olddefconfig
 	@$(MAKE) -C "$(U_BOOT_DIR)" -j "$(PARALLEL)" "O=$(RPI3_BPLUS_64_DIR)" "CROSS_COMPILE=$(ARM64_CROSS_GCC)" all
 
-rpi1_uboot.bin: $(RPI1_DIR)/u-boot
+rpi1_uboot.bin: $(RPI1_DIR)/u-boot.bin
 	@cp $^ $@
 
-rpi2_uboot.bin: $(RPI2_DIR)/u-boot
+rpi2_uboot.bin: $(RPI2_DIR)/u-boot.bin
 	@cp $^ $@
 
-rpi3_32_uboot.bin: $(RPI3_32_DIR)/u-boot
+rpi3_32_uboot.bin: $(RPI3_32_DIR)/u-boot.bin
 	@cp $^ $@
 
-rpi3_64_uboot.bin: $(RPI3_64_DIR)/u-boot
+rpi3_64_uboot.bin: $(RPI3_64_DIR)/u-boot.bin
 	@cp $^ $@
 
-rpi3_bplus_32_uboot.bin: $(RPI3_BPLUS_32_DIR)/u-boot
+rpi3_bplus_32_uboot.bin: $(RPI3_BPLUS_32_DIR)/u-boot.bin
 	@cp $^ $@
 
-rpi3_bplus_64_uboot.bin: $(RPI3_BPLUS_64_DIR)/u-boot
+rpi3_bplus_64_uboot.bin: $(RPI3_BPLUS_64_DIR)/u-boot.bin
 	@cp $^ $@
 
 .PHONY: checksum
