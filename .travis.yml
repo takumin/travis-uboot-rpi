@@ -8,6 +8,10 @@ addons:
     - gcc-arm-linux-gnueabihf
     - gcc-aarch64-linux-gnu
 
+env:
+  global:
+  - BUILD_DIR="/tmp/uboot-rpi"
+
 script:
 - make
 - make show
