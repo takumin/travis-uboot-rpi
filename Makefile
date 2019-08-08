@@ -13,8 +13,8 @@ RPI3_BPLUS_64_DIR  ?= $(abspath $(BUILD_DIR)/rpi3_bplus_64)
 
 PARALLEL           ?= $(shell expr $(shell nproc) + 2)
 
-ARM32_BOOTFILE     ?= ipxe/bin/arm32.efi
-ARM64_BOOTFILE     ?= ipxe/bin/arm64.efi
+ARM32_BOOTFILE     ?= ipxe/bin/rpi-arm32.efi
+ARM64_BOOTFILE     ?= ipxe/bin/rpi-arm64.efi
 
 CONFIG_BOOTCOMMAND ?= dhcp; if pxe get; then pxe boot; fi
 
