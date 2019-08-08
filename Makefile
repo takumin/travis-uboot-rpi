@@ -17,14 +17,6 @@ default: build dts checksum
 
 .PHONY: build
 build: rpi1_uboot.bin rpi2_uboot.bin rpi3_32_uboot.bin rpi3_64_uboot.bin
-	@echo
-	@echo "U-Boot Directory:                       $(U_BOOT_DIR)"
-	@echo "Raspberry Pi 1 Build Directory:         $(RPI1_DIR)"
-	@echo "Raspberry Pi 2 Build Directory:         $(RPI2_DIR)"
-	@echo "Raspberry Pi 3 (32Bit) Build Directory: $(RPI3_32_DIR)"
-	@echo "Raspberry Pi 3 (64Bit) Build Directory: $(RPI3_64_DIR)"
-	@echo "Parallel Build Number:                  $(PARALLEL)"
-	@echo
 
 $(RPI1_DIR)/u-boot:
 	@$(MAKE) -C "$(U_BOOT_DIR)" -j "$(PARALLEL)" "O=$(RPI1_DIR)" "CROSS_COMPILE=$(ARM32_CROSS_GCC)" rpi_defconfig
@@ -68,15 +60,6 @@ bcm2837-rpi-3-b.dtb: $(RPI3_32_DIR)/u-boot
 
 .PHONY: checksum
 checksum: MD5SUMS SHA1SUMS SHA256SUMS SHA512SUMS
-	@echo
-	@cat MD5SUMS
-	@echo
-	@cat SHA1SUMS
-	@echo
-	@cat SHA256SUMS
-	@echo
-	@cat SHA512SUMS
-	@echo
 
 MD5SUMS: rpi1_uboot.bin rpi2_uboot.bin rpi3_32_uboot.bin rpi3_64_uboot.bin bcm2835-rpi-b.dtb bcm2836-rpi-2-b.dtb bcm2837-rpi-3-b.dtb
 	@md5sum $^ | tee $@ > /dev/null
@@ -89,6 +72,27 @@ SHA256SUMS: rpi1_uboot.bin rpi2_uboot.bin rpi3_32_uboot.bin rpi3_64_uboot.bin bc
 
 SHA512SUMS: rpi1_uboot.bin rpi2_uboot.bin rpi3_32_uboot.bin rpi3_64_uboot.bin bcm2835-rpi-b.dtb bcm2836-rpi-2-b.dtb bcm2837-rpi-3-b.dtb
 	@sha512sum $^ | tee $@ > /dev/null
+
+.PHONY: show
+show: MD5SUMS SHA1SUMS SHA256SUMS SHA512SUMS
+	@echo "U-Boot Directory:                       $(U_BOOT_DIR)"
+	@echo "Raspberry Pi 1 Build Directory:         $(RPI1_DIR)"
+	@echo "Raspberry Pi 2 Build Directory:         $(RPI2_DIR)"
+	@echo "Raspberry Pi 3 (32Bit) Build Directory: $(RPI3_32_DIR)"
+	@echo "Raspberry Pi 3 (64Bit) Build Directory: $(RPI3_64_DIR)"
+	@echo "Parallel Build Number:                  $(PARALLEL)"
+	@echo
+	@echo "MD5SUMS"
+	@cat MD5SUMS
+	@echo
+	@echo "SHA1SUMS"
+	@cat SHA1SUMS
+	@echo
+	@echo "SHA256SUMS"
+	@cat SHA256SUMS
+	@echo
+	@echo "SHA512SUMS"
+	@cat SHA512SUMS
 
 .PHONY: clean
 clean:
