@@ -39,11 +39,11 @@ Please create a file with the following contents.
 #kernel=rpi2_uboot.bin
 
 # Raspberry Pi 3 Model B (32bit)
-#kernel=rpi3_32b_uboot.bin
+#kernel=rpi3_32_uboot.bin
 
 # Raspberry Pi 3 Model B (64bit)
 #arm_control=0x200
-#kernel=rpi3_64b_uboot.bin
+#kernel=rpi3_64_uboot.bin
 ```
 
 ## Final
