@@ -1,9 +1,4 @@
-rpi1/
-rpi2/
-rpi3_32/
-rpi3_64/
-rpi3_bplus_32/
-rpi3_bplus_64/
+build/
 *.bin
 MD5SUMS
 SHA1SUMS

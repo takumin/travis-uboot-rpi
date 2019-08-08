@@ -4,13 +4,14 @@ ARM32_CROSS_GCC   := "arm-linux-gnueabihf-"
 ARM64_CROSS_GCC   := "aarch64-linux-gnu-"
 
 U_BOOT_DIR        := $(abspath $(CURDIR)/u-boot)
+BUILD_DIR         := $(abspath $(CURDIR)/build)
 
-RPI1_DIR          := $(abspath $(CURDIR)/rpi1)
-RPI2_DIR          := $(abspath $(CURDIR)/rpi2)
-RPI3_32_DIR       := $(abspath $(CURDIR)/rpi3_32)
-RPI3_64_DIR       := $(abspath $(CURDIR)/rpi3_64)
-RPI3_BPLUS_32_DIR := $(abspath $(CURDIR)/rpi3_bplus_32)
-RPI3_BPLUS_64_DIR := $(abspath $(CURDIR)/rpi3_bplus_64)
+RPI1_DIR          := $(abspath $(BUILD_DIR)/rpi1)
+RPI2_DIR          := $(abspath $(BUILD_DIR)/rpi2)
+RPI3_32_DIR       := $(abspath $(BUILD_DIR)/rpi3_32)
+RPI3_64_DIR       := $(abspath $(BUILD_DIR)/rpi3_64)
+RPI3_BPLUS_32_DIR := $(abspath $(BUILD_DIR)/rpi3_bplus_32)
+RPI3_BPLUS_64_DIR := $(abspath $(BUILD_DIR)/rpi3_bplus_64)
 
 PARALLEL          := $(shell expr $(shell nproc) + 2)
 
@@ -18,7 +19,10 @@ PARALLEL          := $(shell expr $(shell nproc) + 2)
 default: build checksum
 
 .PHONY: build
-build: rpi1_uboot.bin rpi2_uboot.bin rpi3_32_uboot.bin rpi3_64_uboot.bin rpi3_bplus_32_uboot.bin rpi3_bplus_64_uboot.bin
+build: $(BUILD_DIR) rpi1_uboot.bin rpi2_uboot.bin rpi3_32_uboot.bin rpi3_64_uboot.bin rpi3_bplus_32_uboot.bin rpi3_bplus_64_uboot.bin
+
+$(BUILD_DIR):
+	@mkdir -p $@
 
 $(RPI1_DIR)/u-boot:
 	@$(MAKE) -C "$(U_BOOT_DIR)" -j "$(PARALLEL)" "O=$(RPI1_DIR)" "CROSS_COMPILE=$(ARM32_CROSS_GCC)" rpi_defconfig
@@ -37,11 +41,12 @@ $(RPI3_64_DIR)/u-boot:
 	@$(MAKE) -C "$(U_BOOT_DIR)" -j "$(PARALLEL)" "O=$(RPI3_64_DIR)" "CROSS_COMPILE=$(ARM64_CROSS_GCC)" all
 
 $(RPI3_BPLUS_32_DIR)/u-boot:
-	@cp "$(U_BOOT_DIR)/configs/rpi_3_b_plus_defconfig" "$(U_BOOT_DIR)/configs/rpi_3_b_plus_32b_defconfig"
-	@sed -i -e 's@CONFIG_TARGET_RPI_3=y@CONFIG_TARGET_RPI_3_32B=y@' "$(U_BOOT_DIR)/configs/rpi_3_b_plus_32b_defconfig"
+	@cp "$(U_BOOT_DIR)/configs/rpi_3_b_plus_defconfig"                              "$(U_BOOT_DIR)/configs/rpi_3_b_plus_32b_defconfig"
+	@sed -i -e 's@CONFIG_TARGET_RPI_3=y@CONFIG_TARGET_RPI_3_32B=y@'                 "$(U_BOOT_DIR)/configs/rpi_3_b_plus_32b_defconfig"
 	@sed -i -e 's@CONFIG_SYS_TEXT_BASE=0x00080000@CONFIG_SYS_TEXT_BASE=0x00008000@' "$(U_BOOT_DIR)/configs/rpi_3_b_plus_32b_defconfig"
 	@$(MAKE) -C "$(U_BOOT_DIR)" -j "$(PARALLEL)" "O=$(RPI3_BPLUS_32_DIR)" "CROSS_COMPILE=$(ARM32_CROSS_GCC)" rpi_3_b_plus_32b_defconfig
 	@$(MAKE) -C "$(U_BOOT_DIR)" -j "$(PARALLEL)" "O=$(RPI3_BPLUS_32_DIR)" "CROSS_COMPILE=$(ARM32_CROSS_GCC)" all
+	@rm "$(U_BOOT_DIR)/configs/rpi_3_b_plus_32b_defconfig"
 
 $(RPI3_BPLUS_64_DIR)/u-boot:
 	@$(MAKE) -C "$(U_BOOT_DIR)" -j "$(PARALLEL)" "O=$(RPI3_BPLUS_64_DIR)" "CROSS_COMPILE=$(ARM64_CROSS_GCC)" rpi_3_b_plus_defconfig
@@ -110,4 +115,4 @@ clean:
 
 .PHONY: distclean
 distclean: clean
-	@rm -fr "$(RPI1_DIR)" "$(RPI2_DIR)" "$(RPI3_32_DIR)" "$(RPI3_64_DIR)" "$(RPI3_BPLUS_32_DIR)" "$(RPI3_BPLUS_64_DIR)"
+	@rm -fr "$(BUILD_DIR)"
