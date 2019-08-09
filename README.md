@@ -32,6 +32,9 @@ Please download U-Boot binary from release page.
 Please create a file with the following contents.
 
 ```
+# Enable GPIO UART
+#enable_uart=1
+
 # Raspberry Pi 1 Model A/A+/B/B+
 #kernel=rpi1_uboot.bin
 
@@ -42,7 +45,7 @@ Please create a file with the following contents.
 #kernel=rpi3_32_uboot.bin
 
 # Raspberry Pi 3 Model B (64bit)
-#arm_control=0x200
+#arm_64bit=1
 #kernel=rpi3_64_uboot.bin
 ```
 
