@@ -1,25 +1,28 @@
-ARM32_CROSS_GCC    ?= arm-linux-gnueabihf-
-ARM64_CROSS_GCC    ?= aarch64-linux-gnu-
+ARM32_CROSS_GCC        ?= arm-linux-gnueabihf-
+ARM64_CROSS_GCC        ?= aarch64-linux-gnu-
 
-U_BOOT_DIR         ?= $(abspath $(CURDIR)/u-boot)
-BUILD_DIR          ?= $(abspath $(CURDIR)/build)
+U_BOOT_DIR             ?= $(abspath $(CURDIR)/u-boot)
+BUILD_DIR              ?= $(abspath $(CURDIR)/build)
 
-RPI1_DIR           ?= $(abspath $(BUILD_DIR)/rpi1)
-RPI2_DIR           ?= $(abspath $(BUILD_DIR)/rpi2)
-RPI3_32_DIR        ?= $(abspath $(BUILD_DIR)/rpi3_32)
-RPI3_64_DIR        ?= $(abspath $(BUILD_DIR)/rpi3_64)
-RPI3_BPLUS_32_DIR  ?= $(abspath $(BUILD_DIR)/rpi3_bplus_32)
-RPI3_BPLUS_64_DIR  ?= $(abspath $(BUILD_DIR)/rpi3_bplus_64)
+RPI1_DIR               ?= $(abspath $(BUILD_DIR)/rpi1)
+RPI2_DIR               ?= $(abspath $(BUILD_DIR)/rpi2)
+RPI3_32_DIR            ?= $(abspath $(BUILD_DIR)/rpi3_32)
+RPI3_64_DIR            ?= $(abspath $(BUILD_DIR)/rpi3_64)
+RPI3_BPLUS_32_DIR      ?= $(abspath $(BUILD_DIR)/rpi3_bplus_32)
+RPI3_BPLUS_64_DIR      ?= $(abspath $(BUILD_DIR)/rpi3_bplus_64)
 
-PARALLEL           ?= $(shell expr $(shell nproc) + 2)
+RPI1_BOOTFILE          ?= pxelinux.cfg/rpi1
+RPI2_BOOTFILE          ?= pxelinux.cfg/rpi2
+RPI3_32_BOOTFILE       ?= pxelinux.cfg/rpi3_32
+RPI3_64_BOOTFILE       ?= pxelinux.cfg/rpi3_64
+RPI3_BPLUS_32_BOOTFILE ?= pxelinux.cfg/rpi3_bplus_32
+RPI3_BPLUS_64_BOOTFILE ?= pxelinux.cfg/rpi3_bplus_64
 
-ARM32_BOOTFILE     ?= rpi-arm32.efi
-ARM64_BOOTFILE     ?= rpi-arm64.efi
+PARALLEL               ?= $(shell expr $(shell nproc) + 2)
 
 ifeq ($(BOOTCOMMAND),)
-BOOTCOMMAND := mmc dev 0;
-BOOTCOMMAND += fatload mmc 0:1 \$${kernel_addr_r} BOOTFILE;
-BOOTCOMMAND += bootefi \$${kernel_addr_r}
+BOOTCOMMAND := setenv bootfile BOOTFILE;
+BOOTCOMMAND += dhcp; if pxe get; then pxe boot; fi;
 endif
 
 .PHONY: default
@@ -51,7 +54,7 @@ $(RPI3_BPLUS_64_DIR):
 
 $(RPI1_DIR)/.config: $(RPI1_DIR)
 	@cp -a "$(U_BOOT_DIR)/configs/rpi_defconfig" $@
-	@echo "CONFIG_BOOTCOMMAND=\"$(subst BOOTFILE,$(ARM32_BOOTFILE),$(BOOTCOMMAND))\"" >> $@
+	@echo "CONFIG_BOOTCOMMAND=\"$(subst BOOTFILE,$(RPI1_BOOTFILE),$(BOOTCOMMAND))\"" >> $@
 	@echo "CONFIG_BOOTDELAY=0" >> $@
 	@echo "CONFIG_CMD_BOOTEFI=y" >> $@
 	@echo "CONFIG_EFI_LOADER=y" >> $@
@@ -61,7 +64,7 @@ $(RPI1_DIR)/.config: $(RPI1_DIR)
 
 $(RPI2_DIR)/.config: $(RPI2_DIR)
 	@cp -a "$(U_BOOT_DIR)/configs/rpi_2_defconfig" $@
-	@echo "CONFIG_BOOTCOMMAND=\"$(subst BOOTFILE,$(ARM32_BOOTFILE),$(BOOTCOMMAND))\"" >> $@
+	@echo "CONFIG_BOOTCOMMAND=\"$(subst BOOTFILE,$(RPI2_BOOTFILE),$(BOOTCOMMAND))\"" >> $@
 	@echo "CONFIG_BOOTDELAY=0" >> $@
 	@echo "CONFIG_CMD_BOOTEFI=y" >> $@
 	@echo "CONFIG_EFI_LOADER=y" >> $@
@@ -71,7 +74,7 @@ $(RPI2_DIR)/.config: $(RPI2_DIR)
 
 $(RPI3_32_DIR)/.config: $(RPI3_32_DIR)
 	@cp -a "$(U_BOOT_DIR)/configs/rpi_3_32b_defconfig" $@
-	@echo "CONFIG_BOOTCOMMAND=\"$(subst BOOTFILE,$(ARM32_BOOTFILE),$(BOOTCOMMAND))\"" >> $@
+	@echo "CONFIG_BOOTCOMMAND=\"$(subst BOOTFILE,$(RPI3_32_BOOTFILE),$(BOOTCOMMAND))\"" >> $@
 	@echo "CONFIG_BOOTDELAY=0" >> $@
 	@echo "CONFIG_CMD_BOOTEFI=y" >> $@
 	@echo "CONFIG_EFI_LOADER=y" >> $@
@@ -81,7 +84,7 @@ $(RPI3_32_DIR)/.config: $(RPI3_32_DIR)
 
 $(RPI3_64_DIR)/.config: $(RPI3_64_DIR)
 	@cp -a "$(U_BOOT_DIR)/configs/rpi_3_defconfig" $@
-	@echo "CONFIG_BOOTCOMMAND=\"$(subst BOOTFILE,$(ARM64_BOOTFILE),$(BOOTCOMMAND))\"" >> $@
+	@echo "CONFIG_BOOTCOMMAND=\"$(subst BOOTFILE,$(RPI3_64_BOOTFILE),$(BOOTCOMMAND))\"" >> $@
 	@echo "CONFIG_BOOTDELAY=0" >> $@
 	@echo "CONFIG_CMD_BOOTEFI=y" >> $@
 	@echo "CONFIG_EFI_LOADER=y" >> $@
@@ -91,7 +94,7 @@ $(RPI3_64_DIR)/.config: $(RPI3_64_DIR)
 
 $(RPI3_BPLUS_32_DIR)/.config: $(RPI3_BPLUS_32_DIR)
 	@cp -a "$(U_BOOT_DIR)/configs/rpi_3_b_plus_defconfig" $@
-	@echo "CONFIG_BOOTCOMMAND=\"$(subst BOOTFILE,$(ARM32_BOOTFILE),$(BOOTCOMMAND))\"" >> $@
+	@echo "CONFIG_BOOTCOMMAND=\"$(subst BOOTFILE,$(RPI3_BPLUS_32_BOOTFILE),$(BOOTCOMMAND))\"" >> $@
 	@echo "CONFIG_BOOTDELAY=0" >> $@
 	@echo "CONFIG_CMD_BOOTEFI=y" >> $@
 	@echo "CONFIG_EFI_LOADER=y" >> $@
@@ -103,7 +106,7 @@ $(RPI3_BPLUS_32_DIR)/.config: $(RPI3_BPLUS_32_DIR)
 
 $(RPI3_BPLUS_64_DIR)/.config: $(RPI3_BPLUS_64_DIR)
 	@cp -a "$(U_BOOT_DIR)/configs/rpi_3_b_plus_defconfig" $@
-	@echo "CONFIG_BOOTCOMMAND=\"$(subst BOOTFILE,$(ARM64_BOOTFILE),$(BOOTCOMMAND))\"" >> $@
+	@echo "CONFIG_BOOTCOMMAND=\"$(subst BOOTFILE,$(RPI3_BPLUS_64_BOOTFILE),$(BOOTCOMMAND))\"" >> $@
 	@echo "CONFIG_BOOTDELAY=0" >> $@
 	@echo "CONFIG_CMD_BOOTEFI=y" >> $@
 	@echo "CONFIG_EFI_LOADER=y" >> $@
